@@ -1,2 +1,2 @@
-# CO_Project
-- Armsim written in java
+# Armsim Written in java
+
