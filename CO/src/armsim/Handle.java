@@ -89,8 +89,12 @@ class Handle{
 		}
 		return bin;
 	}
-	
-	
+	String getOffsetbranch(String str) {
+		return str.substring(8);
+	}
+	String getOpcodeDS(String str) {
+		return str.substring(6,12);
+	}
 	String getOpcode(String str)
 	{
 		return str.substring(7, 11);
