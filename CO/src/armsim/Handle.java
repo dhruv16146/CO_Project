@@ -111,6 +111,14 @@ class Handle{
 	{
 		return str.substring(0,3);	
 	}
+	String getF(String str)
+	{
+		return str.substring(4,6);
+	}
+	String getI(String str)
+	{
+		return str.substring(6,7);
+	}
 	public static Handle getHandle(){
 		if(h==null) {
 			h=new Handle();
