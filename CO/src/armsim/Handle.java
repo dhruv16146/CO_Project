@@ -1,12 +1,16 @@
 package armsim;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 class Handle{
 	private static Handle h=null;
 	private Handle(){
 		
 	}
+	private final static File f=new File("./input");
 	String getOpcode(String str){
 		
 		String s1=str.substring(6,9);
@@ -15,6 +19,7 @@ class Handle{
 		for(int i=0;i<3;i++) {
 			try {
 			Integer.parseInt(s1.substring(i,i+1));
+			
 			bin+= Integer.toBinaryString(i);
 			}
 			catch(Exception e) {
@@ -45,6 +50,29 @@ class Handle{
 	
 		
 		
+	}
+	String[] Readmemfile() {
+		String hold="";
+		for(String i:f.list()) {
+			if(i.equals("input.mem")) {
+				File fr=new File("./input/input.mem");
+				try {
+					Scanner input=new Scanner(fr);
+					
+					while(input.hasNextLine()) {
+						hold+=input.nextLine();
+						hold+=",";
+						
+					}
+					
+				} 
+				catch (FileNotFoundException e) {			
+					e.printStackTrace();
+				}
+			}
+		}
+		String [] lines=hold.split(",");
+		return lines;
 	}
 	
 	
