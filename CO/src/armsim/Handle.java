@@ -1,19 +1,44 @@
 package armsim;
 
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 class Handle{
 	private static Handle h=null;
+	
 	private Handle()
 	{
 		
 	}
 	private final static File f=new File("./input");
-	String getCond(String str){
-		return str.substring(0,4);
+	
+	int getIntegerfromhex(String str){
+		
+		if(str.equals("A")) 
+		{
+		return 10;
+		}
+		else if(str.equals("B")) {
+			return 11;
+		}
+		else if(str.equals("C")) {
+			return 12;
+		}
+		else if(str.equals("D")){
+			return 13;
+		}
+		else if(str.equals("E")){
+			return 14;
+		}
+		else if(str.equals("F")){
+		return 15;
+		}		
+		return Integer.parseInt(str);
 	}
+	
+	
 	String getBeg(String str)
 	{	
 		String s1=str.substring(6,9);
@@ -65,12 +90,18 @@ class Handle{
 		return bin;
 	}
 	
+	
 	String getOpcode(String str)
 	{
 		return str.substring(7, 11);
 	}
-	String[] Readmemfile() {
+	
+	
+	
+	HashMap<Integer,String> Readmemfile() {
 		String hold="";
+		HashMap<Integer,String> tmp=new HashMap<Integer,String>();
+		int cnt=0;
 		for(String i:f.list()) {
 			if(i.equals("input.mem")) {
 				File fr=new File("./input/input.mem");
@@ -78,8 +109,10 @@ class Handle{
 					Scanner input=new Scanner(fr);
 					
 					while(input.hasNextLine()) {
-						hold+=input.nextLine();
-						hold+=",";
+						hold=input.nextLine().substring(6);
+						tmp.put(cnt,hold);
+						cnt+=4;
+						
 						
 					}
 					
@@ -89,42 +122,51 @@ class Handle{
 				}
 			}
 		}
-		String [] lines=hold.split(",");
-		return lines;
+		
+		
+		return tmp;
 	}	
-	String getS(String str){
-		return str.substring(11,12);
-	}
-	//taken directly from e3A
+	
+	
+	
 	String getR1(String str) 
 	{
 		return str.substring(9,10);
 	
-	}	
+	}
+	
 	String getRdest(String str) 
 	{
 		return str.substring(10,11);
+	}
+	String getImmediate(String str) {
+		return str.substring(str.length()-2);
 	}
 	String getR2(String str) 
 	{
 		return str.substring(str.length()-1);
 	}
+	
 	String getShift(String str) 
 	{
 		return str.substring(str.length()-3,str.length()-1);
 	}
+	
 	String getAddress(String str) 
 	{
 		return str.substring(0,3);	
 	}
+	
 	String getF(String str)
 	{
 		return str.substring(4,6);
 	}
+	
 	String getI(String str)
 	{
 		return str.substring(6,7);
 	}
+	
 	public static Handle getHandle(){
 		if(h==null) {
 			h=new Handle();
