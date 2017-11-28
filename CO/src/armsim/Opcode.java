@@ -2,10 +2,12 @@ package armsim;
 import java.util.HashMap;
 class Opcode {
 	public HashMap<String,String> bin = new HashMap<String,String>();
+	
 	public Opcode()
 	{
 		
 	}
+	
 	public static void main(String[] args) {
 		System.out.println("Working");
 		Handle h=Handle.getHandle();
@@ -22,6 +24,7 @@ class Opcode {
 			System.out.println(h.getF(h.getBeg(i)));
 			System.out.println(h.getI(h.getBeg(i)));
 		}
+		
 	}
 
 }

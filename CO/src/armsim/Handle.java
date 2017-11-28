@@ -1,6 +1,5 @@
 package armsim;
 
-import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -12,6 +11,9 @@ class Handle{
 		
 	}
 	private final static File f=new File("./input");
+	String getCond(String str){
+		return str.substring(0,4);
+	}
 	String getBeg(String str)
 	{	
 		String s1=str.substring(6,9);
@@ -90,6 +92,10 @@ class Handle{
 		String [] lines=hold.split(",");
 		return lines;
 	}	
+	String getS(String str){
+		return str.substring(11,12);
+	}
+	//taken directly from e3A
 	String getR1(String str) 
 	{
 		return str.substring(9,10);
