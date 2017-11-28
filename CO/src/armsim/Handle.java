@@ -33,6 +33,10 @@ class Handle{
 				{
 					bin+="0"+Integer.toBinaryString(t);
 				}
+				else if(t>=8 && t<=9)
+				{
+					bin+=Integer.toBinaryString(t);
+				}
 			}
 			catch(Exception e) {
 				if(s1.substring(i,i+1).equals("A")) 
