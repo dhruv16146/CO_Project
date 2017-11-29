@@ -41,7 +41,7 @@ class Handle{
 	
 	String getBeg(String str)
 	{	
-		String s1=str.substring(6,9);
+		String s1=str.substring(0,3);
 		String bin="";
 		
 		for(int i=0;i<3;i++) {
@@ -116,32 +116,24 @@ class Handle{
 						hold=input.nextLine().substring(6);
 						tmp.put(cnt,hold);
 						cnt+=4;
-						
-						
 					}
-					
 				} 
-				catch (FileNotFoundException e) {			
+				catch (FileNotFoundException e) 
+				{			
 					e.printStackTrace();
 				}
 			}
 		}
-		
-		
 		return tmp;
-	}	
-	
-	
-	
+	}
 	String getR1(String str) 
 	{
-		return str.substring(9,10);
-	
+		return str.substring(3,4);
 	}
 	
 	String getRdest(String str) 
 	{
-		return str.substring(10,11);
+		return str.substring(4,5);
 	}
 	String getImmediate(String str) {
 		return str.substring(str.length()-2);
