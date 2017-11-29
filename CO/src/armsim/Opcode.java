@@ -104,12 +104,13 @@ class Opcode
 			{
 				System.out.print("MVN");		
 			}
+			
 			if(h.getI(h.getBeg(current)).equals("0")) 
 			{	
 				immediate=false;
 				give_operands();
-				System.out.print("First Operand is R" + first + ", Second Operand is R"+second);
-				System.out.print("Destination Register is R"+dest);
+				System.out.print(" First Operand is R" + first + ", Second Operand is R"+second);
+				System.out.print(" ,Destination Register is R"+dest);
 				System.out.println();
 			}
 		
@@ -117,8 +118,8 @@ class Opcode
 			{
 				immediate=true;
 				give_operands();
-				System.out.print("First Operand is R" + first + ", Second Operand is R"+second);
-				System.out.print("Destination Register is R"+dest);
+				System.out.print(" First Operand is R" + first + ", Second Immediate Operand is "+second);
+				System.out.print(" ,Destination Register is R"+dest);
 				System.out.println();
 				
 				//if second a register use R[second]
@@ -196,6 +197,10 @@ class Opcode
 	public static void main(String[] args) 
 	{
 		Opcode op=new Opcode();
+		op.fetch();
+		op.decode();
+		op.fetch();
+		op.decode();
 		op.fetch();
 		op.decode();
 	}
