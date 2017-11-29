@@ -3,7 +3,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 class Opcode 
 {
-	HashMap<Integer,String> memory;
+	HashMap<Integer,String> ins_memory;
+	HashMap<Integer, Integer> mem;
 	Handle h=Handle.getHandle();
 	int[]  R=new int[16];
 	String current;
@@ -13,8 +14,8 @@ class Opcode
 	boolean link;
 	Opcode()
 	{
-		memory=h.Readmemfile();
-		R[13]=memory.size()*4;
+		ins_memory=h.Readmemfile();
+		R[13]=ins_memory.size()*4;
 		R=new int[16];
 		immediate=false;
 	}
@@ -52,8 +53,8 @@ class Opcode
 	}
 	void fetch() 
 	{
-		current=memory.get(R[15]);
-		System.out.println("Fetching Instruction 0x"+memory.get(R[15])+" from address "+R[15]);
+		current=ins_memory.get(R[15]);
+		System.out.println("Fetching Instruction 0x"+ins_memory.get(R[15])+" from address "+R[15]);
 		R[15]+=4;
 	}
 	void decode() 
@@ -147,14 +148,13 @@ class Opcode
 			//STR
 			if(op==24) 
 			{
-				System.out.print("STR");				
+				System.out.print(" STR ");				
 			}
-			
 			
 			//LDR
 			else if(op==25) 
 			{
-				System.out.print("LDR");
+				System.out.print(" LDR ");
 			}
 			
 			
@@ -223,7 +223,6 @@ class Opcode
 				if(op==0)
 				{
 					R[dest]=R[first]&R[second];
-					System.out.println("Execute: ADD " + R[first] + " and "+ R[second]);
 				}
 				//eor
 				else if(op==1)
@@ -343,19 +342,27 @@ class Opcode
 			//STR
 			if(op==24) 
 			{
-				System.out.print("STR");				
+				System.out.print("STR");
+				mem.put(R[first]+second, R[dest]);
+				
 			}
-			
-			
 			//LDR
 			else if(op==25) 
 			{
-				System.out.print("LDR");
+				System.out.print(" LDR ");
+				if(mem.get(R[first]+second)!=null)
+				{
+					R[dest]=mem.get(R[first]+second);
+				}
+				else 
+				{
+					R[dest]=0;
+				}
 			}
 			
 			
 			give_operands();
-			System.out.print("Source Operand is R" + first + ", Destination Operand is R"+dest);
+			System.out.print(" Source Operand is R" + first + ", Destination Operand is R"+dest);
 			System.out.print(" offset "+second);
 			System.out.println();
 			//now second acts as offset
