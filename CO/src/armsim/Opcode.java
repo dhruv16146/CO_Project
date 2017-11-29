@@ -7,6 +7,7 @@ class Opcode
 	Handle h=Handle.getHandle();
 	int[]  R=new int[16];
 	String current;
+	int N,Z,E,C;
 	int first,second,dest;
 	boolean immediate;
 	Opcode()
@@ -188,6 +189,185 @@ class Opcode
 	}
 	public void execute()
 	{
+		if(h.getF(h.getBeg(current)).equals("00"))
+		{
+			int op=Integer.parseInt(h.getOpcode(h.getBeg(current)),2);
+			if(immediate == false) 
+			{	
+				if(op==0)
+				{
+					R[dest]=R[first]&R[second];
+					System.out.println("Execute: ADD " + R[first] + " and "+ R[second]);
+				}
+				//eor
+				else if(op==1)
+				{
+					R[dest]=R[first]^R[second];
+				}
+				//sub
+				else if(op==2)
+				{
+					R[dest]=R[first]-R[second];
+				}
+				//rsb
+				else if(op==3)
+				{
+					R[dest]=R[second]-R[first];
+				}
+				//add
+				else if(op==4)
+				{
+					R[dest]=R[first]+R[second];
+				}
+				//cmp
+				else if(op==10) 
+				{
+					if(R[first]-R[second]<0)
+					{
+						N=1;
+						Z=0;
+					}
+					else if(R[first]-R[second]==0)
+					{
+						N=0;
+						Z=1;
+					}
+				}
+				//orr
+				else if(op==12) 
+				{
+					R[dest] = R[first] | R[second];	
+				}
+				//mov
+				else if(op==13) 
+				{
+					R[dest] = R[second];
+				}
+				//mvn
+				else if(op==15)
+				{
+					R[dest] = 0xFFFFFFF ^ R[second];		
+				}
+			}
+			else
+			{
+				//and
+				if(op==0)
+				{
+					R[dest]=R[first]&second;
+					System.out.println("Execute: ADD " + R[first] + " and "+ R[second]);
+				}
+				//eor
+				else if(op==1)
+				{
+					R[dest]=R[first]^second;
+				}
+				//sub
+				else if(op==2)
+				{
+					R[dest]=R[first]-second;
+				}
+				//rsb
+				else if(op==3)
+				{
+					R[dest]=second-R[first];
+				}
+				//add
+				else if(op==4)
+				{
+					R[dest]=R[first]+second;
+				}
+				//cmp
+				else if(op==10) 
+				{
+					if(R[first]-second<0)
+					{
+						N=1;
+						Z=0;
+					}
+					else if(R[first]-second==0)
+					{
+						N=0;
+						Z=1;
+					}
+				}
+				//orr
+				else if(op==12) 
+				{
+					R[dest] = R[first] | second;	
+				}
+				//mov
+				else if(op==13) 
+				{
+					R[dest] = second;
+				}
+				//mvn
+				else if(op==15)
+				{
+					R[dest] = 0xFFFFFFF ^ second;		
+				}
+				//if second a register use R[second]
+			}
+		}
+		//Data Store
+		else if(h.getF(h.getBeg(current)).equals("01")) 
+		{
+			int op=Integer.parseInt(h.getOpcodeDS(h.getBeg(current)),2);	
+		
+			//STR
+			if(op==24) 
+			{
+				System.out.print("STR");				
+			}
+			
+			
+			//LDR
+			else if(op==25) 
+			{
+				System.out.print("LDR");
+			}
+			
+			
+			give_operands();
+			System.out.print("Source Operand is R" + first + ", Destination Operand is R"+dest);
+			System.out.print(" offset "+second);
+			System.out.println();
+			//now second acts as offset
+				
+		}
+		
+		//Branch
+		else if(h.getF(h.getBeg(current)).equals("10")) 
+		{	
+			int op=Integer.parseInt(h.getOpcode(h.getBeg(current)),2);
+			if(op==0) 
+			{
+				System.out.print("Branch Equals");	
+			}
+			else if(op==1) 
+			{
+				System.out.println("Branch Not Equals");
+			}
+			
+			else if(op==10) 
+			{
+				System.out.println("Branch Greater then or equal");	
+				
+			}
+			else if(op==11) 
+			{
+				System.out.println("Branch less then");	
+			}
+			else if(op==12) 
+			{
+				System.out.println("Branch Greater then");
+			}
+			else if(op==13) 
+			{
+				System.out.println("Branch Less then or equal");		
+			}
+			//to be seen from book
+		}
 		
 	}
 	public void run(HashMap<Integer, String> map)
