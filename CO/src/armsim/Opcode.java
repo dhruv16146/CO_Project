@@ -10,9 +10,11 @@ class Opcode
 	int N,Z,E,C;
 	int first,second,dest;
 	boolean immediate;
+	boolean link;
 	Opcode()
 	{
 		memory=h.Readmemfile();
+		R[13]=memory.size()*4;
 		R=new int[16];
 		immediate=false;
 	}
@@ -24,12 +26,14 @@ class Opcode
 			second=h.getIntegerfromhex(h.getR2(current));
 			dest=h.getIntegerfromhex(h.getRdest(current));
 		}
+		
 		else
 		{
 			first=h.getIntegerfromhex(h.getR1(current));
 			second= h.getIntegerfromhex(h.getImmediate(current).substring(0, 1))*16  +  h.getIntegerfromhex(h.getImmediate(current).substring(1));
 			dest=h.getIntegerfromhex(h.getRdest(current));	
 		}
+		
 	}
 	void reset() 
 	{
@@ -38,6 +42,13 @@ class Opcode
 	void cycle() 
 	{
 	
+		
+		
+	
+	}
+	void swi_exit() {
+		
+		
 	}
 	void fetch() 
 	{
@@ -126,12 +137,13 @@ class Opcode
 				//if second a register use R[second]
 			}
 		}
+		
 		//Data Store
 		else if(h.getF(h.getBeg(current)).equals("01")) 
 		{
 			
 			int op=Integer.parseInt(h.getOpcodeDS(h.getBeg(current)),2);	
-		
+			
 			//STR
 			if(op==24) 
 			{
@@ -157,36 +169,50 @@ class Opcode
 		//Branch
 		else if(h.getF(h.getBeg(current)).equals("10")) 
 		{	
-			int op=Integer.parseInt(h.getOpcode(h.getBeg(current)),2);
-			if(op==0) 
+			int op=Integer.parseInt(h.getOpcodeBranch(h.getBeg(current)),2);
+			int cond=Integer.parseInt(h.getCond(h.getBeg(current)),2);
+			int offset=Integer.parseInt(h.getOffsetbranch(h.getBeg(current)),2);
+			if(cond==0) 
 			{
 				System.out.print("Branch Equals");	
 			}
-			else if(op==1) 
+			else if(cond==1) 
 			{
-				System.out.println("Branch Not Equals");
+				System.out.print("Branch Not Equals");
 			}
 			
-			else if(op==10) 
+			else if(cond==10) 
 			{
-				System.out.println("Branch Greater then or equal");	
+				System.out.print("Branch Greater then or equal");	
 				
 			}
-			else if(op==11) 
+			else if(cond==11) 
 			{
-				System.out.println("Branch less then");	
+				System.out.print("Branch less then");	
 			}
-			else if(op==12) 
+			else if(cond==12) 
 			{
-				System.out.println("Branch Greater then");
+				System.out.print("Branch Greater then");
 			}
-			else if(op==13) 
+			else if(cond==13) 
 			{
-				System.out.println("Branch Less then or equal");		
+				System.out.print("Branch Less then or equal");		
 			}
-			//to be seen from book
+			
+			if(op==2) {
+				link=false;
+			}
+			
+			else {
+				link=true;
+				System.out.print(" with link");	
+			}
+			System.out.print(" Offset is "+ offset);
+			System.out.println();
 		}
+		
 	}
+	
 	public void execute()
 	{
 		if(h.getF(h.getBeg(current)).equals("00"))
@@ -383,6 +409,7 @@ class Opcode
 		op.decode();
 		op.fetch();
 		op.decode();
+		
 	}
 
 }

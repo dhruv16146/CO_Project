@@ -92,6 +92,13 @@ class Handle{
 	String getOffsetbranch(String str) {
 		return str.substring(8);
 	}
+	String getCond(String str) {
+		return str.substring(0,4);
+	}
+	
+	String getOpcodeBranch(String str) {
+		return str.substring(6,8);
+	}
 	String getOpcodeDS(String str) {
 		return str.substring(6,12);
 	}
@@ -138,6 +145,13 @@ class Handle{
 	String getImmediate(String str) {
 		return str.substring(str.length()-2);
 	}
+	
+	String getBranchOffset(String str) {
+		return str.substring(str.length()-6);	
+	}
+	
+	
+	
 	String getR2(String str) 
 	{
 		return str.substring(str.length()-1);
