@@ -6,18 +6,21 @@ class Opcode
 	HashMap<Integer,String> ins_memory;
 	HashMap<Integer, Integer> mem;
 	Handle h=Handle.getHandle();
-	int[]  R=new int[16];
+	static int[]  R=new int[16];
 	String current;
 	int N,Z,E,C;
 	int first,second,dest;
 	boolean immediate;
-	boolean link;
+	boolean link,mem_op;
+	boolean exit_status;
 	Opcode()
 	{
 		ins_memory=h.Readmemfile();
 		R[13]=ins_memory.size()*4;
 		R=new int[16];
 		immediate=false;
+		link=false;
+		mem_op=false;
 	}
 	public void give_operands() 
 	{
@@ -42,27 +45,40 @@ class Opcode
 	}
 	void cycle() 
 	{
+		
+		while(true) {
+			this.fetch();
+			this.decode();
+			this.execute();
+			this.mem();
+		}
 	
 		
 		
 	
 	}
 	void swi_exit() {
+		System.out.print("Exit:");
+		System.exit(0);
 		
 		
 	}
 	void fetch() 
 	{
 		current=ins_memory.get(R[15]);
+		if(current.equals("EF000011")) {
+			exit_status=true;
+		}
 		System.out.println("Fetching Instruction 0x"+ins_memory.get(R[15])+" from address "+R[15]);
 		R[15]+=4;
 	}
 	void decode() 
 	{
 		//Data Processing
+		if(!exit_status) {
 		System.out.print("Decode: ");
 		System.out.print(" Operation is ");
-		
+		}
 		if(h.getF(h.getBeg(current)).equals("00"))
 		{
 			int op=Integer.parseInt(h.getOpcode(h.getBeg(current)),2);
@@ -125,6 +141,14 @@ class Opcode
 				System.out.print(" First Operand is R" + first + ", Second Operand is R"+second);
 				System.out.print(" ,Destination Register is R"+dest);
 				System.out.println();
+				if(first==second) {
+					System.out.print("Read Registers  R"+first+"="+R[first]);
+				}
+				else {
+					System.out.print("Read Registers  R" + first + "=" + R[first] + ", R"+second+"="+ R[second]);
+				}
+				System.out.println();
+				
 			}
 		
 			else 
@@ -134,7 +158,8 @@ class Opcode
 				System.out.print(" First Operand is R" + first + ", Second Immediate Operand is "+second);
 				System.out.print(" ,Destination Register is R"+dest);
 				System.out.println();
-				
+				System.out.print("Read Registers  R"+first+"="+R[first]);
+				System.out.println();
 				//if second a register use R[second]
 			}
 		}
@@ -142,19 +167,20 @@ class Opcode
 		//Data Store
 		else if(h.getF(h.getBeg(current)).equals("01")) 
 		{
-			
+			mem_op=true;
 			int op=Integer.parseInt(h.getOpcodeDS(h.getBeg(current)),2);	
 			
 			//STR
 			if(op==24) 
 			{
-				System.out.print(" STR ");				
+				System.out.print("STR");				
 			}
+			
 			
 			//LDR
 			else if(op==25) 
 			{
-				System.out.print(" LDR ");
+				System.out.print("LDR");
 			}
 			
 			
@@ -169,6 +195,7 @@ class Opcode
 		//Branch
 		else if(h.getF(h.getBeg(current)).equals("10")) 
 		{	
+			
 			int op=Integer.parseInt(h.getOpcodeBranch(h.getBeg(current)),2);
 			int cond=Integer.parseInt(h.getCond(h.getBeg(current)),2);
 			int offset=Integer.parseInt(h.getOffsetbranch(h.getBeg(current)),2);
@@ -372,50 +399,28 @@ class Opcode
 		//Branch
 		else if(h.getF(h.getBeg(current)).equals("10")) 
 		{	
-			int op=Integer.parseInt(h.getOpcode(h.getBeg(current)),2);
-			if(op==0) 
-			{
-				System.out.print("Branch Equals");	
-			}
-			else if(op==1) 
-			{
-				System.out.println("Branch Not Equals");
-			}
 			
-			else if(op==10) 
-			{
-				System.out.println("Branch Greater then or equal");	
-				
-			}
-			else if(op==11) 
-			{
-				System.out.println("Branch less then");	
-			}
-			else if(op==12) 
-			{
-				System.out.println("Branch Greater then");
-			}
-			else if(op==13) 
-			{
-				System.out.println("Branch Less then or equal");		
-			}
-			//to be seen from book
 		}
 		
 	}
-	public void run(HashMap<Integer, String> map)
-	{
+	
+	public void mem() {
+		if(mem_op) {
+			System.out.println(" Memory Operation ");
+		}
+		else {
+			System.out.println("No Memory Operation ");
+		}
+		if(exit_status) {
+			swi_exit();
+		}
 		
 	}
+	
 	public static void main(String[] args) 
 	{
 		Opcode op=new Opcode();
-		op.fetch();
-		op.decode();
-		op.fetch();
-		op.decode();
-		op.fetch();
-		op.decode();
+		op.cycle();
 		
 	}
 
