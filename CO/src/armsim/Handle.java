@@ -120,8 +120,14 @@ class Handle{
 					Scanner input=new Scanner(fr);
 					
 					while(input.hasNextLine()) {
-						hold=input.nextLine().substring(6);
+						hold=input.nextLine();
+						
+						hold=hold.substring(hold.length()-8);
+						
 						tmp.put(cnt,hold);
+						
+						//System.out.println(cnt+" "+tmp.get(cnt));
+						
 						cnt+=4;
 					}
 				} 
@@ -133,24 +139,26 @@ class Handle{
 		}
 		return tmp;
 	}
+	//E3A
 	String getR1(String str) 
 	{
 		return str.substring(3,4);
 	}
-	
+	//E3A
 	String getRdest(String str) 
 	{
 		return str.substring(4,5);
 	}
+	//E3A
 	String getImmediate(String str) {
 		return str.substring(str.length()-2);
 	}
-	
+	//E3A
 	String getBranchOffset(String str) {
 		return str.substring(str.length()-6);	
 	}
 	
-	
+	//E3A
 	
 	String getR2(String str) 
 	{

@@ -13,6 +13,7 @@ class Opcode
 	boolean immediate;
 	boolean link,mem_op;
 	boolean exit_status;
+	
 	Opcode()
 	{
 		ins_memory=h.Readmemfile();
@@ -22,6 +23,7 @@ class Opcode
 		link=false;
 		mem_op=false;
 	}
+	
 	public void give_operands() 
 	{
 		if(immediate)
@@ -414,6 +416,10 @@ class Opcode
 		if(exit_status) {
 			swi_exit();
 		}
+		
+	}
+	public void writeback()
+	{
 		
 	}
 	
