@@ -496,65 +496,66 @@ class Opcode
 				else if(h.getF(h.getBeg(current)).equals("10")) 
 				{	
 					int op=Integer.parseInt(h.getOpcodeDS(h.getBeg(current)),2);
+					cond=Integer.parseInt(h.getCond(h.getBeg(current)),2);
 					int temp = 0;
-					if(op==0)
+					if(cond==0)
 					{
 						if(Z>0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==1)
+					else if(cond==1)
 					{
 						if(Z<=0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==11)
+					else if(cond==11)
 					{
 						if(N>0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==13)
+					else if(cond==13)
 					{
 						if(N>0 || Z>0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==12)
+					else if(cond==12)
 					{
 						if(N<=0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==10)
+					else if(cond==10)
 					{
 						if(N<=0 && Z>0)
 						{
 							temp = 1;
 						}
 					}
-					else if(op==14)
+					else if(cond==14)
 					{
 						temp = 1;
 					}
 					
 					if(temp == 1)
-					{
+					{	
 						if(offset.substring(0, 1).equals("1"))
 						{
-							offset = "11111111" + offset;
+							offset = "111111" + offset + "00";
 						}
 						else
 						{
-							offset = "00000000" + offset;
+							offset = "000000" + offset + "00";
 						}
-						R[15] = R[15] + Integer.parseInt(offset, 2);
+						R[15] = R[15] + Integer.parseInt(offset, 2) + 4;
 						System.out.println("Updating PC to " + R[15]);
 					}
 					else

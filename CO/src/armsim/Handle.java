@@ -128,6 +128,7 @@ class Handle{
 					
 					while(input.hasNextLine()) {
 						try {
+							hold = input.nextLine();
 						hold=hold.substring(hold.length()-8);
 						}
 						catch(Exception e){
