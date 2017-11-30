@@ -14,37 +14,45 @@ class Handle{
 	}
 	private final static File f=new File("./input");
 	
-	int getIntegerfromhex(String str){
-		
+	int getIntegerfromhex(String str)
+	{	
 		if(str.equalsIgnoreCase("A")) 
 		{
-		return 10;
+			return 10;
 		}
-		else if(str.equalsIgnoreCase("B")) {
+		else if(str.equalsIgnoreCase("B")) 
+		{
 			return 11;
 		}
-		else if(str.equalsIgnoreCase("C")) {
+		else if(str.equalsIgnoreCase("C")) 
+		{
 			return 12;
 		}
-		else if(str.equalsIgnoreCase("D")){
+		else if(str.equalsIgnoreCase("D"))
+		{
 			return 13;
 		}
-		else if(str.equalsIgnoreCase("E")){
+		else if(str.equalsIgnoreCase("E"))
+		{
 			return 14;
 		}
-		else if(str.equalsIgnoreCase("F")){
-		return 15;
+		else if(str.equalsIgnoreCase("F"))
+		{
+			return 15;
 		}		
-		return Integer.parseInt(str);
+		else
+		{
+			return Integer.parseInt(str);
+		}
 	}
-	
 	
 	String getBeg(String str)
 	{	
 		String s1=str.substring(0,3);
 		String bin="";
 		
-		for(int i=0;i<3;i++) {
+		for(int i=0;i<3;i++) 
+		{
 			try 
 			{
 				int t=Integer.parseInt(s1.substring(i,i+1));
@@ -52,7 +60,8 @@ class Handle{
 				{
 					bin+="0000";
 				}
-				else if(t==1) {
+				else if(t==1) 
+				{
 					bin+="000"+Integer.toBinaryString(t);
 				}
 				else if(t>1 && t<=3)
@@ -68,24 +77,30 @@ class Handle{
 					bin+=Integer.toBinaryString(t);
 				}
 			}
-			catch(Exception e) {
+			catch(Exception e) 
+			{
 				if(s1.substring(i,i+1).equalsIgnoreCase("A")) 
 				{
 					bin+= Integer.toBinaryString(10);
 				}
-				else if(s1.substring(i,i+1).equalsIgnoreCase("B")) {
+				else if(s1.substring(i,i+1).equalsIgnoreCase("B")) 
+				{
 					bin+= Integer.toBinaryString(11);
 				}
-				else if(s1.substring(i,i+1).equalsIgnoreCase("C")) {
+				else if(s1.substring(i,i+1).equalsIgnoreCase("C")) 
+				{
 					bin+= Integer.toBinaryString(12);
 				}
-				else if(s1.substring(i,i+1).equalsIgnoreCase("D")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("D"))
+				{
 					bin+= Integer.toBinaryString(13);
 				}
-				else if(s1.substring(i,i+1).equalsIgnoreCase("E")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("E"))
+				{
 					bin+= Integer.toBinaryString(14);
 				}
-				else if(s1.substring(i,i+1).equalsIgnoreCase("F")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("F"))
+				{
 					bin+= Integer.toBinaryString(15);
 				}		
 			}
@@ -93,20 +108,23 @@ class Handle{
 		return bin;
 	}
 	//binary from e3a
-	String getOffsetbranch(String str) {
+	String getOffsetbranch(String str) 
+	{
 		return str.substring(8);
 	}
 	//binary from e3a
-	String getCond(String str) {
+	String getCond(String str)
+	{
 		return str.substring(0,4);
 	}
 	//binary from e3a
-	String getOpcodeBranch(String str) {
+	String getOpcodeBranch(String str) 
+	{
 		return str.substring(6,8);
 	}
 	
-	String getOpcodeDS(String str) {
-		//System.out.println(str);
+	String getOpcodeDS(String str)
+	{
 		return str.substring(6,12);
 	}
 	String getOpcode(String str)
@@ -114,18 +132,18 @@ class Handle{
 		return str.substring(7, 11);
 	}
 	
-//	1110 0010 0100 1101 1101 0000 0010 1100
-	
-	HashMap<Long,String> Readmemfile() {
+	HashMap<Long,String> Readmemfile() 
+	{
 		String hold="";
 		HashMap<Long,String> tmp=new HashMap<Long,String>();
 		long cnt=0;
-		for(String i:f.list()) {
-			if(i.equals("input.mem")) {
+		for(String i:f.list()) 
+		{
+			if(i.equals("input.mem")) 
+			{
 				File fr=new File("./input/input.mem");
 				try {
-					Scanner input=new Scanner(fr);
-					
+					Scanner input=new Scanner(fr);		
 					while(input.hasNextLine()) 
 					{
 						hold = input.nextLine();
@@ -140,11 +158,7 @@ class Handle{
 							tmp.put(cnt,hold);
 							cnt+=4;
 						}
-						
-						
 						//System.out.println(cnt+" "+tmp.get(cnt));
-						
-						
 					}
 				} 
 				catch (FileNotFoundException e) 
@@ -155,7 +169,6 @@ class Handle{
 		}
 		return tmp;
 	}
-	
 	//E3A
 	String getR1(String str) 
 	{
@@ -174,19 +187,15 @@ class Handle{
 	String getBranchOffset(String str) {
 		return str.substring(str.length()-6);	
 	}
-	
-	//E3A
-	
+	//E3A	
 	String getR2(String str) 
 	{
 		return str.substring(str.length()-1);
 	}
-	
 	String getShift(String str) 
 	{
 		return str.substring(str.length()-3,str.length()-1);
 	}
-	
 	String getAddress(String str) 
 	{
 		return str.substring(0,3);	
@@ -202,8 +211,10 @@ class Handle{
 		return str.substring(6,7);
 	}
 	
-	public static Handle getHandle(){
-		if(h==null) {
+	public static Handle getHandle()
+	{
+		if(h==null) 
+		{
 			h=new Handle();
 		}
 		return h;
