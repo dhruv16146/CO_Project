@@ -129,20 +129,16 @@ class Handle{
 					while(input.hasNextLine()) 
 					{
 						hold = input.nextLine();
-						if(hold.length()>4)
-						{
-							hold=hold.substring(hold.length()-8);
-							tmp.put(cnt,hold);
-							cnt+=4;
-						}
-						else if(hold.length()==0)
+						String[] f=hold.split(" ");
+						if(f.length==1 || f.length==0)
 						{
 							
 						}
 						else
 						{
-							hold=hold.substring(2,3);
-							
+							hold=hold.substring(hold.length()-8);
+							tmp.put(cnt,hold);
+							cnt+=4;
 						}
 						
 						

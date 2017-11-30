@@ -1,7 +1,6 @@
 package armsim;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 class Opcode 
 {
 	HashMap<Long,String> ins_memory;
@@ -15,12 +14,9 @@ class Opcode
 	int cond;
 	String offset;
 	boolean immediate;
-	boolean exit_status;
-	boolean read_status;
-	boolean print_status;
 	boolean flag=false;
 	boolean link,mem_op;
-	
+	boolean exit_status;
 	Opcode()
 	{
 		ins_memory=h.Readmemfile();
@@ -75,27 +71,8 @@ class Opcode
 		
 		
 	}
-
 	void swi_read() {
 		
-		if(R[0]==0) {
-		System.out.println("Give the input:");
-		Scanner sc=new Scanner(System.in);
-		R[0]=sc.nextInt();
-		}
-		else {
-			
-		}
-		
-	}
-	void swi_print() {
-		if(R[0]==1) {
-			System.out.println("Output is: "+R[1]);
-		}
-		else {
-			
-			
-		}
 		
 		
 	}
@@ -103,20 +80,9 @@ class Opcode
 	void fetch() 
 	{
 		
-		exit_status=false;
-		read_status=false;
-		print_status=false;
-		
 		current=ins_memory.get(R[15]);
 		if(current.equals("EF000011")) {
 			exit_status=true;
-		}
-		else if(current.equals("EF00006C")) {
-			read_status=true;
-			
-		}
-		else if(current.equals("EF00006B")) {
-			print_status=true;
 		}
 		
 		System.out.println("FETCH:Fetching Instruction 0x"+ins_memory.get(R[15])+" from address "+R[15]);
@@ -127,7 +93,7 @@ class Opcode
 	void decode() 
 	{
 		//Data Processing
-		if((!exit_status&&!read_status&&!print_status)) {
+		if(!exit_status) {
 		System.out.print("DECODE: ");
 		System.out.print(" Operation is ");
 		}
@@ -302,6 +268,10 @@ class Opcode
 			else if(cond==13) 
 			{
 				System.out.print("Branch Less then or equal");		
+			}
+			else if(cond == 14)
+			{
+				System.out.println("Unconditional Branch");
 			}
 			
 			if(op==2) {
@@ -580,6 +550,7 @@ class Opcode
 						temp_b = 1;
 					}
 					
+					
 					if(temp_b == 1)
 					{	
 						if(offset.substring(0, 1).equals("1"))
@@ -611,15 +582,6 @@ class Opcode
 		}
 		if(exit_status) {
 			swi_exit();
-		}
-		
-		else if(read_status) {
-			swi_read();
-		}
-		
-		else if(print_status) {
-			swi_print();
-			
 		}
 		
 	}
