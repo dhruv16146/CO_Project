@@ -116,29 +116,39 @@ class Handle{
 	
 //	1110 0010 0100 1101 1101 0000 0010 1100
 	
-	HashMap<Integer,String> Readmemfile() {
+	HashMap<Long,String> Readmemfile() {
 		String hold="";
-		HashMap<Integer,String> tmp=new HashMap<Integer,String>();
-		int cnt=0;
+		HashMap<Long,String> tmp=new HashMap<Long,String>();
+		long cnt=0;
 		for(String i:f.list()) {
 			if(i.equals("input.mem")) {
 				File fr=new File("./input/input.mem");
 				try {
 					Scanner input=new Scanner(fr);
 					
-					while(input.hasNextLine()) {
-						try {
-							hold = input.nextLine();
-						hold=hold.substring(hold.length()-8);
+					while(input.hasNextLine()) 
+					{
+						hold = input.nextLine();
+						if(hold.length()>4)
+						{
+							hold=hold.substring(hold.length()-8);
+							tmp.put(cnt,hold);
+							cnt+=4;
 						}
-						catch(Exception e){
-							hold=hold.substring(2);
+						else if(hold.length()==0)
+						{
+							
 						}
-						tmp.put(cnt,hold);
+						else
+						{
+							hold=hold.substring(2,3);
+							
+						}
+						
 						
 						//System.out.println(cnt+" "+tmp.get(cnt));
 						
-						cnt+=4;
+						
 					}
 				} 
 				catch (FileNotFoundException e) 

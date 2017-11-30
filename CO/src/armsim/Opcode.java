@@ -3,12 +3,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 class Opcode 
 {
-	HashMap<Integer,String> ins_memory;
-	HashMap<Integer, Integer> mem=new HashMap<Integer,Integer>();
+	HashMap<Long,String> ins_memory;
+	HashMap<Long, Long> mem=new HashMap<Long,Long>();
 	Handle h=Handle.getHandle();
-	static int[]  R=new int[16];
+	static long[]  R=new long[16];
 	String current;
-	int temp=-1;
+	long temp=-1;
 	int N,Z,E,C;
 	int first,second,dest;
 	int cond;
@@ -20,11 +20,12 @@ class Opcode
 	Opcode()
 	{
 		ins_memory=h.Readmemfile();
-		R[13]=ins_memory.size()*4;
-		R=new int[16];
+		R[13]=(long)ins_memory.size()*4;
+		R=new long[16];
 		immediate=false;
 		link=false;
 		mem_op=false;
+		reset();
 	}
 	public void give_operands() 
 	{
@@ -497,55 +498,55 @@ class Opcode
 				{	
 					int op=Integer.parseInt(h.getOpcodeDS(h.getBeg(current)),2);
 					cond=Integer.parseInt(h.getCond(h.getBeg(current)),2);
-					int temp = 0;
+					long temp_b = 0;
 					if(cond==0)
 					{
 						if(Z>0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==1)
 					{
 						if(Z<=0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==11)
 					{
 						if(N>0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==13)
 					{
 						if(N>0 || Z>0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==12)
 					{
 						if(N<=0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==10)
 					{
 						if(N<=0 && Z>0)
 						{
-							temp = 1;
+							temp_b = 1;
 						}
 					}
 					else if(cond==14)
 					{
-						temp = 1;
+						temp_b = 1;
 					}
 					
-					if(temp == 1)
+					if(temp_b == 1)
 					{	
 						if(offset.substring(0, 1).equals("1"))
 						{
@@ -555,7 +556,8 @@ class Opcode
 						{
 							offset = "000000" + offset + "00";
 						}
-						R[15] = R[15] + Integer.parseInt(offset, 2) + 4;
+						R[15] = R[15] + Long.parseLong(offset, 2) + 4;
+						R[15] = (int)R[15];
 						System.out.println("Updating PC to " + R[15]);
 					}
 					else
@@ -563,12 +565,10 @@ class Opcode
 						System.out.println("No execute operation");
 					}
 				}
-			}	
-		
-		
+			}
 	
-	
-	public void mem() {
+	public void mem() 
+	{
 		if(mem_op) {
 			System.out.println("MEMORY: Memory Operation ");
 		}
