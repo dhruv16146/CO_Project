@@ -16,23 +16,23 @@ class Handle{
 	
 	int getIntegerfromhex(String str){
 		
-		if(str.equals("A")) 
+		if(str.equalsIgnoreCase("A")) 
 		{
 		return 10;
 		}
-		else if(str.equals("B")) {
+		else if(str.equalsIgnoreCase("B")) {
 			return 11;
 		}
-		else if(str.equals("C")) {
+		else if(str.equalsIgnoreCase("C")) {
 			return 12;
 		}
-		else if(str.equals("D")){
+		else if(str.equalsIgnoreCase("D")){
 			return 13;
 		}
-		else if(str.equals("E")){
+		else if(str.equalsIgnoreCase("E")){
 			return 14;
 		}
-		else if(str.equals("F")){
+		else if(str.equalsIgnoreCase("F")){
 		return 15;
 		}		
 		return Integer.parseInt(str);
@@ -52,7 +52,10 @@ class Handle{
 				{
 					bin+="0000";
 				}
-				else if(t>=1 && t<=3)
+				else if(t==1) {
+					bin+="000"+Integer.toBinaryString(t);
+				}
+				else if(t>1 && t<=3)
 				{
 					bin+="00"+Integer.toBinaryString(t);
 				}
@@ -66,40 +69,44 @@ class Handle{
 				}
 			}
 			catch(Exception e) {
-				if(s1.substring(i,i+1).equals("A")) 
+				if(s1.substring(i,i+1).equalsIgnoreCase("A")) 
 				{
 					bin+= Integer.toBinaryString(10);
 				}
-				else if(s1.substring(i,i+1).equals("B")) {
+				else if(s1.substring(i,i+1).equalsIgnoreCase("B")) {
 					bin+= Integer.toBinaryString(11);
 				}
-				else if(s1.substring(i,i+1).equals("C")) {
+				else if(s1.substring(i,i+1).equalsIgnoreCase("C")) {
 					bin+= Integer.toBinaryString(12);
 				}
-				else if(s1.substring(i,i+1).equals("D")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("D")){
 					bin+= Integer.toBinaryString(13);
 				}
-				else if(s1.substring(i,i+1).equals("E")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("E")){
 					bin+= Integer.toBinaryString(14);
 				}
-				else if(s1.substring(i,i+1).equals("F")){
+				else if(s1.substring(i,i+1).equalsIgnoreCase("F")){
 					bin+= Integer.toBinaryString(15);
 				}		
 			}
 		}
 		return bin;
 	}
+	//binary from e3a
 	String getOffsetbranch(String str) {
 		return str.substring(8);
 	}
+	//binary from e3a
 	String getCond(String str) {
 		return str.substring(0,4);
 	}
-	
+	//binary from e3a
 	String getOpcodeBranch(String str) {
 		return str.substring(6,8);
 	}
+	
 	String getOpcodeDS(String str) {
+		//System.out.println(str);
 		return str.substring(6,12);
 	}
 	String getOpcode(String str)
@@ -107,7 +114,7 @@ class Handle{
 		return str.substring(7, 11);
 	}
 	
-	
+//	1110 0010 0100 1101 1101 0000 0010 1100
 	
 	HashMap<Integer,String> Readmemfile() {
 		String hold="";
@@ -120,10 +127,12 @@ class Handle{
 					Scanner input=new Scanner(fr);
 					
 					while(input.hasNextLine()) {
-						hold=input.nextLine();
-						
+						try {
 						hold=hold.substring(hold.length()-8);
-						
+						}
+						catch(Exception e){
+							hold=hold.substring(2);
+						}
 						tmp.put(cnt,hold);
 						
 						//System.out.println(cnt+" "+tmp.get(cnt));
@@ -139,6 +148,7 @@ class Handle{
 		}
 		return tmp;
 	}
+	
 	//E3A
 	String getR1(String str) 
 	{
@@ -174,12 +184,12 @@ class Handle{
 	{
 		return str.substring(0,3);	
 	}
-	
+	//binary
 	String getF(String str)
 	{
 		return str.substring(4,6);
 	}
-	
+	//binary
 	String getI(String str)
 	{
 		return str.substring(6,7);
