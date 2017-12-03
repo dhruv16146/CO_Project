@@ -8,6 +8,7 @@ class Opcode
 	HashMap<Long, Long> mem=new HashMap<Long,Long>();
 	Handle h=Handle.getHandle();
 	static long[]  R=new long[16];
+	String print;
 	String current;
 	long temp=-1;
 	int N,Z,V,C;
@@ -23,6 +24,7 @@ class Opcode
 	
 	Opcode()
 	{
+		print="";
 		ins_memory=h.Readmemfile();
 		R[13]=(long)ins_memory.size()*4;
 		R=new long[16];
@@ -54,7 +56,17 @@ class Opcode
 	{
 		Arrays.fill(R,0);	
 	}
-	
+	void onecycle(){
+		print="";
+		flag=false;
+		this.fetch();
+		this.decode();
+		this.execute();
+		this.mem();
+		this.writeback();
+		System.out.println();
+		
+	}
 	void cycle() 
 	{
 		while(true) 
@@ -121,6 +133,7 @@ class Opcode
 			print_status=true;
 		}
 		System.out.println("FETCH:Fetching Instruction 0x"+ins_memory.get(R[15])+" from address "+R[15]);
+		print=print+""+"FETCH:Fetching Instruction 0x"+ins_memory.get(R[15])+" from address "+R[15]+"\n";
 		R[15]+=4;
 	}
 	
@@ -130,6 +143,7 @@ class Opcode
 		if((!exit_status&&!read_status&&!print_status)) {
 		System.out.print("DECODE: ");
 		System.out.print(" Operation is ");
+		print=print+""+"DECODE: Operation is ";
 		}
 		if(h.getF(h.getBeg(current)).equals("00"))
 		{
@@ -138,51 +152,61 @@ class Opcode
 			if(op==0)
 			{
 				System.out.print("AND");
+				print=print+"AND";
 			}
 			//eor
 			else if(op==1)
 			{
 				System.out.print("EOR");
+				print=print+"EOR";
 			}
 			//sub
 			else if(op==2)
 			{
 				System.out.print("SUB");
+				print=print+"SUB";
 			}
 			//rsb
 			else if(op==3)
 			{
 				System.out.print("RSB");
+				print=print+"RSB";
 			}
 			//add
 			else if(op==4)
 			{
 				System.out.print("ADD");
+				print=print+"ADD";
 			}
 			//cmp
 			else if(op==10) 
 			{
 				System.out.print("CMP");
+				print=print+"CMP";
 			}
 			//cmn
 			else if(op==11) 
 			{
 				System.out.print("CMN");
+				print=print+"CMN";
 			}
 			//orr
 			else if(op==12) 
 			{
-				System.out.print("ORR");	
+				System.out.print("ORR");
+				print=print+"ORR";
 			}
 			//mov
 			else if(op==13) 
 			{
 				System.out.print("MOV");
+				print=print+"MOV";
 			}
 			//mvn
 			else if(op==15)
 			{
-				System.out.print("MVN");		
+				System.out.print("MVN");
+				print=print+"MVN";
 			}
 			
 			if(h.getI(h.getBeg(current)).equals("0")) 
@@ -191,11 +215,14 @@ class Opcode
 				give_operands();
 				System.out.print(" First Operand is R" + first + ", Second Operand is R"+second);
 				System.out.print(" ,Destination Register is R"+dest);
+				print=print+" First Operand is R" + first + ", Second Operand is R"+second+" ,Destination Register is R"+dest+"\n";
 				System.out.println();
 				if(first==second) {
+					print=print+"Read Registers: R"+first+"="+R[first]+"\n";
 					System.out.print("Read Registers: R"+first+"="+R[first]);
 				}
 				else {
+					print=print+"Read Registers: R" + first + "=" + R[first] + ", R"+second+"="+ R[second]+"\n";
 					System.out.print("Read Registers: R" + first + "=" + R[first] + ", R"+second+"="+ R[second]);
 				}
 				System.out.println();
@@ -205,9 +232,12 @@ class Opcode
 				immediate=true;
 				give_operands();
 				System.out.print(" First Operand is R" + first + ", Second Immediate Operand is "+second);
+				print+=" First Operand is R" + first + ", Second Immediate Operand is "+second;
 				System.out.print(" ,Destination Register is R"+dest);
+				print =print+" ,Destination Register is R"+dest+"\n";
 				System.out.println();
 				System.out.print("Read Registers: R"+first+"="+R[first]);
+				print=print+"Read Registers: R"+first+"="+R[first]+"\n";
 				System.out.println();
 				//if second a register use R[second]
 			}
@@ -223,12 +253,14 @@ class Opcode
 			{
 				System.out.print("STR");
 				System.out.println(" Source Operand is R"+dest);
+				print+="STR"+" Source Operand is R"+dest+"\n";
 			}
 			//LDR
 			else if(op==25) 
 			{
 				System.out.print("LDR");
 				System.out.println(" Destination Register is R" +first+ " Source is memory "+(R[first]+second));
+				print+="LDR"+" Destination Register is R" +first+ " Source is memory "+(R[first]+second)+"\n";
 			}
 			immediate=true;
 			give_operands();
@@ -256,35 +288,42 @@ class Opcode
 			if(cond==0) 
 			{
 				System.out.print("Branch Equals");	
+				print+="Branch Equals";
 			}
 			//bne
 			else if(cond==1) 
 			{
+				print+="Branch Not Equals";
 				System.out.print("Branch Not Equals");
 			}
 			//bgt
 			else if(cond==10) 
 			{
+				print+="Branch Greater then or equal";
 				System.out.print("Branch Greater then or equal");		
 			}
 			//blt
 			else if(cond==11) 
 			{
+				print+="Branch less then";
 				System.out.print("Branch less then");	
 			}
 			//bgt
 			else if(cond==12) 
 			{
+				print+="Branch Greater then";
 				System.out.print("Branch Greater then");
 			}
 			//ble
 			else if(cond==13) 
 			{
+				print+="Branch Lesser then or equal";
 				System.out.print("Branch Less then or equal");		
 			}
 			//b
 			else if(cond == 14)
 			{
+				print+="Unconditional Branch";
 				System.out.println("Unconditional Branch");
 			}
 			//lr
@@ -297,6 +336,7 @@ class Opcode
 				link=true;
 				System.out.print(" with link");	
 			}
+			print+=" Offset is "+ offset+"\n";
 			System.out.print(" Offset is "+ offset);
 			System.out.println();
 		}
@@ -313,6 +353,7 @@ class Opcode
 				if(op==0)
 				{
 					System.out.println("EXECUTE: AND "+R[first]+" and "+R[second]);
+					print+="EXECUTE: AND "+R[first]+" and "+R[second]+"\n";
 					R[dest]=R[first]&R[second];
 					temp=R[dest];
 					flag=true;
@@ -321,6 +362,7 @@ class Opcode
 				else if(op==1)
 				{
 					System.out.println("EXECUTE: XOR "+R[first]+" and "+R[second]);
+					print+="EXECUTE: XOR "+R[first]+" and "+R[second]+"\n";
 					R[dest]=R[first]^R[second];
 					temp=R[dest];
 					flag=true;
@@ -329,6 +371,7 @@ class Opcode
 				else if(op==2)
 				{
 					System.out.println("EXECUTE: SUBTRACT "+R[first]+" and "+R[second]);
+					print+="EXECUTE: SUBTRACT "+R[first]+" and "+R[second]+"\n";
 					R[dest]=R[first]-R[second];
 					temp=R[dest];
 					flag=true;
@@ -337,6 +380,7 @@ class Opcode
 				else if(op==3)
 				{
 					System.out.println("EXECUTE: SUBTRACT "+R[second]+" and "+R[first]);
+					print+="EXECUTE: SUBTRACT "+R[second]+" and "+R[first]+"\n";
 					R[dest]=R[second]-R[first];
 					temp=R[dest];
 					flag=true;
@@ -345,6 +389,7 @@ class Opcode
 				else if(op==4)
 				{
 					System.out.println("EXECUTE: ADD "+R[first]+" and "+R[second]);
+					print+="EXECUTE: ADD "+R[first]+" and "+R[second]+"\n";
 					R[dest]=R[first]+R[second];
 					temp=R[dest];
 					flag=true;
@@ -353,6 +398,7 @@ class Opcode
 				else if(op==10) 
 				{
 					System.out.println("EXECUTE: COMPARE "+R[first]+" and "+R[second]);
+					print+="EXECUTE: COMPARE "+R[first]+" and "+R[second]+"\n";
 					if(R[first]-R[second]<0)
 					{
 						N=1;
@@ -368,6 +414,7 @@ class Opcode
 				else if(op==12) 
 				{
 					System.out.println("EXECUTE: OR "+R[first]+" and "+R[second]);
+					print+="EXECUTE: OR "+R[first]+" and "+R[second]+"\n";
 					R[dest] = R[first] | R[second];	
 					temp=R[dest];
 					flag=true;
@@ -376,6 +423,7 @@ class Opcode
 				else if(op==13) 
 				{
 					System.out.println("EXECUTE: MOV "+R[second]+" to R"+dest);
+					print+="EXECUTE: MOV "+R[second]+" to R"+dest+"\n";
 					R[dest] = R[second];
 					temp=R[dest];
 					flag=true;
@@ -384,6 +432,7 @@ class Opcode
 				else if(op==15)
 				{
 					System.out.println("EXECUTE: MVN to R"+dest+" with "+R[second]);
+					print+="EXECUTE: MVN to R"+dest+" with "+R[second]+"\n";
 					R[dest] = 0xFFFFFFF ^ R[second];	
 					temp=R[dest];
 					flag=true;
@@ -395,6 +444,7 @@ class Opcode
 				if(op==0)
 				{
 					System.out.println("EXECUTE: AND "+R[first]+" and "+R[second]);
+					print+="EXECUTE: AND "+R[first]+" and "+R[second]+"\n";
 					R[dest]=R[first]&second;
 					temp=R[dest];
 					flag=true;
@@ -403,6 +453,7 @@ class Opcode
 				else if(op==1)
 				{
 					System.out.println("EXECUTE: XOR "+R[first]+" and "+second);
+					print+="EXECUTE: XOR "+R[first]+" and "+second+"\n";
 					R[dest]=R[first]^second;
 					temp=R[dest];
 					flag=true;
@@ -411,6 +462,7 @@ class Opcode
 				else if(op==2)
 				{
 					System.out.println("EXECUTE: SUBTRACT "+R[first]+" and "+second);
+					print+="EXECUTE: SUBTRACT "+R[first]+" and "+second+"\n";
 					R[dest]=R[first]-second;
 					temp=R[dest];
 					flag=true;
@@ -419,6 +471,7 @@ class Opcode
 				else if(op==3)
 				{
 					System.out.println("EXECUTE: SUBTRACT "+second+" and "+R[first]);
+					print+="EXECUTE: SUBTRACT "+second+" and "+R[first]+"\n";
 					R[dest]=second-R[first];
 					temp=R[dest];
 					flag=true;
@@ -427,6 +480,7 @@ class Opcode
 				else if(op==4)
 				{
 					System.out.println("EXECUTE: ADD "+R[first]+" and "+second);
+					print+="EXECUTE: ADD "+R[first]+" and "+second+"\n";
 					R[dest]=R[first]+second;
 					temp=R[dest];
 					flag=true;
@@ -435,6 +489,7 @@ class Opcode
 				else if(op==10) 
 				{
 					System.out.println("EXECUTE: COMPARE "+R[first]+" and "+second);
+					print+="EXECUTE: COMPARE "+R[first]+" and "+second+"\n";
 					if(R[first]-second<0)
 					{
 						N=1;
@@ -450,6 +505,7 @@ class Opcode
 				else if(op==12) 
 				{
 					System.out.println("EXECUTE: OR "+R[first]+" and "+second);
+					print+="EXECUTE: OR "+R[first]+" and "+second+"\n";
 					R[dest] = R[first] | second;
 					temp=R[dest];
 					flag=true;
@@ -458,6 +514,7 @@ class Opcode
 				else if(op==13) 
 				{
 					System.out.println("EXECUTE: MOV "+second+" to R"+dest);
+					print+="EXECUTE: MOV "+second+" to R"+dest+"\n";
 					R[dest] = second;
 					temp=R[dest];
 					flag=true;
@@ -466,6 +523,7 @@ class Opcode
 				else if(op==15)
 				{
 					System.out.println("EXECUTE: MVN to R"+dest+" with "+second);
+					print+="EXECUTE: MVN to R"+dest+" with "+second+"\n";
 					R[dest] = 0xFFFFFFF ^ second;
 					temp=R[dest];
 					flag=true;
@@ -482,6 +540,7 @@ class Opcode
 			if(op==24) 
 			{
 				System.out.println("Storing "+R[dest]+" to memory address "+(R[first]+second));
+				print+="Storing "+R[dest]+" to memory address "+(R[first]+second)+"\n";
 				mem.put(R[first]+second, R[dest]);
 				
 			}
@@ -489,6 +548,7 @@ class Opcode
 			else if(op==25) 
 			{
 				System.out.println("Loading "+mem.get(R[first]+second)+" from memory address "+(R[first]+second)+" ");
+				print+="Loading "+mem.get(R[first]+second)+" from memory address "+(R[first]+second)+" "+"\n";
 				if(mem.get(R[first]+second)!=null)
 				{
 					R[dest]=mem.get(R[first]+second);
@@ -576,10 +636,12 @@ class Opcode
 					R[15] = R[15] + Long.parseLong(offset, 2) + 4;
 					R[15] = (int)R[15];
 					System.out.println("Updating PC to " + R[15]);
+					print+="Updating PC to " + R[15]+"\n";
 				}
 				else
 				{
 					System.out.println("No execute operation");
+					print+="No Excecute Operation "+"\n";
 				}
 			}
 		}
@@ -588,9 +650,11 @@ class Opcode
 	{
 		if(mem_op) {
 			System.out.println("MEMORY: Memory Operation ");
+			print+="MEMORY: Memory Operation "+"\n";
 		}
 		else {
 			System.out.println("MEMORY: No Memory Operation ");
+			print+="MEMORY: No Memory Operation "+"\n";
 		}
 		if(exit_status) {
 			swi_exit();
@@ -613,10 +677,13 @@ class Opcode
 		if(flag==true)
 		{
 			System.out.println("WRITEBACK:Write "+temp+" to R"+dest);
+			print+="WRITEBACK:Write "+temp+" to R"+dest+"\n";
 		}
 		else
 		{
 			System.out.println("WRITEBACK:No Writeback");
+			print+="WRITEBACK:No Writeback"+"\n";
+			
 		}
 	}
 	public static void main(String[] args) 

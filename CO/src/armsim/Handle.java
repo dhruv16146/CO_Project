@@ -7,7 +7,8 @@ import java.util.Scanner;
 
 class Handle{
 	private static Handle h=null;
-	
+	String getallmem="";
+	String[] mem;
 	private Handle()
 	{
 		
@@ -147,6 +148,7 @@ class Handle{
 					while(input.hasNextLine()) 
 					{
 						hold = input.nextLine();
+						
 						String[] f=hold.split(" ");
 						if(f.length==1 || f.length==0)
 						{
@@ -154,7 +156,9 @@ class Handle{
 						}
 						else
 						{
+							getallmem=getallmem+hold+",";
 							hold=hold.substring(hold.length()-8);
+							
 							tmp.put(cnt,hold);
 							cnt+=4;
 						}
@@ -165,6 +169,7 @@ class Handle{
 				{			
 					e.printStackTrace();
 				}
+				mem=getallmem.split(",");
 			}
 		}
 		return tmp;

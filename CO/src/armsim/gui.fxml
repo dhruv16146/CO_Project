@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="814.0" prefWidth="712.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="armsim.guicontroller">
+  <children>
+    <StackPane layoutX="14.0" layoutY="10.0" prefHeight="814.0" prefWidth="712.0">
+      <children>
+        <Button fx:id="btn_cycle" mnemonicParsing="false" onAction="#print" prefHeight="58.0" prefWidth="135.0" text="Cycle" translateX="70.0" translateY="100.0" />
+      </children>
+    </StackPane>
+    <TextArea id="t" fx:id="t2" layoutX="10.0" layoutY="10.0" prefHeight="789.9999000000025" prefWidth="113.0" text="&#10;" wrapText="true" />
+    <TextArea fx:id="t1" layoutX="123.0" layoutY="10.0" prefHeight="389.0" prefWidth="589.0" wrapText="true" />
+    <TextArea fx:id="flow" layoutX="263.0" layoutY="307.0" prefHeight="379.0" prefWidth="200.0" translateX="-128.0" translateY="100.0" wrapText="true" />
+  </children>
+</AnchorPane>
